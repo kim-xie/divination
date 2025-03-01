@@ -9,7 +9,7 @@ import ResultAI from "@/components/result-ai";
 import { animateChildren } from "@/lib/animate";
 import guaIndexData from "@/lib/data/gua-index.json";
 import guaListData from "@/lib/data/gua-list.json";
-import { getAnswer } from "@/app/server";
+import { getAnswer } from "@/app/deepseek";
 import { readStreamableValue } from "ai/rsc";
 import { Button } from "./ui/button";
 import { BrainCircuit, ListRestart } from "lucide-react";
@@ -38,16 +38,18 @@ function Divination() {
         setError(error);
         return;
       }
+      console.log('data: ', data);
       if (data) {
-        let ret = "";
-        for await (const delta of readStreamableValue(data)) {
-          if (delta.startsWith(ERROR_PREFIX)) {
-            setError(delta.slice(ERROR_PREFIX.length));
-            return;
-          }
-          ret += delta;
-          setCompletion(ret);
-        }
+        setCompletion(data);
+        // let ret = "";
+        // for await (const delta of readStreamableValue(data)) {
+        //   if (delta.startsWith(ERROR_PREFIX)) {
+        //     setError(delta.slice(ERROR_PREFIX.length));
+        //     return;
+        //   }
+        //   ret += delta;
+        //   setCompletion(ret);
+        // }
       }
     } catch (err: any) {
       setError(err.message ?? err);
@@ -88,13 +90,14 @@ function Divination() {
 
   function onTransitionEnd() {
     setRotation(false);
-    let frontCount = frontList.reduce((acc, val) => (val ? acc + 1 : acc), 0);
+    // true 为3，false 为2 结果为：6，7，8，9
+    let frontCount = frontList.reduce((acc, val) => (val ? acc + 3 : acc + 2), 0);
     setHexagramList((list) => {
       const newList = [
         ...list,
         {
-          change: frontCount == 0 || frontCount == 3 || null,
-          yang: frontCount >= 2,
+          change: frontCount === 6 || frontCount === 9 || null,
+          yang: [7,9].includes(frontCount),
           separate: list.length == 3,
         },
       ];
@@ -139,6 +142,7 @@ function Divination() {
     if (list.length != 6) {
       return;
     }
+    // https://www.bilibili.com/video/BV1aa4y1E7Au?spm_id_from=333.788.recommend_more_video.-1&vd_source=4e04f35a120ad570a54128776ee1adff
     const guaDict1 = ["坤", "震", "坎", "兑", "艮", "离", "巽", "乾"];
     const guaDict2 = ["地", "雷", "水", "泽", "山", "火", "风", "天"];
 
@@ -178,7 +182,7 @@ function Divination() {
       guaMark: `${(guaIndex + 1).toString().padStart(2, "0")}.${guaName2}`,
       guaTitle: `周易第${guaIndex + 1}卦`,
       // 例：大畜卦(山天大畜)_艮上乾下
-      guaResult: `${guaName1}卦(${guaName2})_${guaDesc}`,
+      guaResult: `${guaName1}卦(${guaName2}) ${guaDesc}`,
       guaChange:
         changeList.length === 0 ? "无变爻" : `变爻: ${changeList.toString()}`,
     });
@@ -220,7 +224,7 @@ function Divination() {
             <div className="flex flex-col justify-around">
               <Result {...resultObj} />
               <div className="flex flex-col gap-2 sm:px-6">
-                <Button
+                {/* <Button
                   size="sm"
                   variant="destructive"
                   onClick={restartClick}
@@ -228,7 +232,7 @@ function Divination() {
                 >
                   <ListRestart size={18} className="mr-1" />
                   重来
-                </Button>
+                </Button> */}
                 {resultAi ? null : (
                   <Button size="sm" onClick={aiClick} disabled={rotation}>
                     <BrainCircuit size={16} className="mr-1" />
