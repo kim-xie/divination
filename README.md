@@ -15,7 +15,7 @@
 1. 克隆仓库：
 
 ```sh
-git clone https://github.com/sunls24/divination
+git clone git@github.com:kim-xie/divination.git
 ```
 
 2. 安装依赖项：
