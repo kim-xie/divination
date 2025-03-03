@@ -9,7 +9,7 @@ import ResultAI from "@/components/result-ai";
 import { animateChildren } from "@/lib/animate";
 import guaIndexData from "@/lib/data/gua-index.json";
 import guaListData from "@/lib/data/gua-list.json";
-import { getAnswer } from "@/app/deepseek";
+import { getAnswer } from "@/app/server";
 import { readStreamableValue } from "ai/rsc";
 import { Button } from "./ui/button";
 import { BrainCircuit, ListRestart } from "lucide-react";
@@ -40,16 +40,16 @@ function Divination() {
       }
       console.log('data: ', data);
       if (data) {
-        setCompletion(data);
-        // let ret = "";
-        // for await (const delta of readStreamableValue(data)) {
-        //   if (delta.startsWith(ERROR_PREFIX)) {
-        //     setError(delta.slice(ERROR_PREFIX.length));
-        //     return;
-        //   }
-        //   ret += delta;
-        //   setCompletion(ret);
-        // }
+        // setCompletion(data);
+        let ret = "";
+        for await (const delta of readStreamableValue(data)) {
+          if (delta.startsWith(ERROR_PREFIX)) {
+            setError(delta.slice(ERROR_PREFIX.length));
+            return;
+          }
+          ret += delta;
+          setCompletion(ret);
+        }
       }
     } catch (err: any) {
       setError(err.message ?? err);
