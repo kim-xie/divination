@@ -1,4 +1,4 @@
-// "use server";
+"use server";
 import OpenAI from "openai";
 
 export async function getAnswer(prompt: string, guaMark: string, guaTitle: string, guaResult: string, guaChange: string) {
