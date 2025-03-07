@@ -55,7 +55,6 @@ export async function getAnswer(prompt: string, guaMark: string, guaTitle: strin
                         ${changeList.join("\n")}`,
             },
         ]
-        console.log('DS_API_KEY', process.env.DS_API_KEY);
         const openai = await new OpenAI({
             baseURL: process.env.DS_BASE_URL,
             apiKey: process.env.DS_API_KEY,
@@ -63,7 +62,7 @@ export async function getAnswer(prompt: string, guaMark: string, guaTitle: strin
         });
         const completion: any = await openai.chat.completions.create({
             messages,
-            model: process.env.DS_MODEL || "deepseek-reasoner", // R1: deepseek-reasoner V3: deepseek-chat
+            model: process.env.DS_MODEL || "deepseek-chat", // R1: deepseek-reasoner V3: deepseek-chat
         }).catch((err: any) => {
             console.log('deepseek error', err);
             return { error: err.message?? err };
