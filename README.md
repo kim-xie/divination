@@ -68,6 +68,12 @@ touch .env.local
 pnpm run dev
 ```
 
+### Windows 本地构建
+
+运行 `pnpm build` 构建，完成后使用 `pnpm start` 启动生产预览。开发服务使用 `.next-dev`，生产构建使用 `.next`，避免同时运行时争用 `.next/trace`。修改配置后需要重启已有开发服务。
+
+Windows 使用普通构建输出，避免 standalone 打包创建符号链接时出现 `EPERM`；Linux（含 Docker）继续生成 standalone 输出。不要同时运行多个生产构建。Browserslist 数据过期提示属于警告，不是 `EPERM` 的原因。
+
 ## ☁️ 使用 Vercel 部署
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsunls23%2Fdivination&env=OPENAI_API_KEY)
