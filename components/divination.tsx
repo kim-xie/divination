@@ -218,10 +218,10 @@ function Divination() {
       )}
 
       {!inputQuestion && hexagramList.length != 0 && (
-        <div className="flex max-w-md gap-2">
+        <div className="flex w-full max-w-md flex-wrap justify-center gap-2">
           <Hexagram list={hexagramList} />
           {showResult && (
-            <div className="flex flex-col justify-around">
+            <div className="flex max-w-full flex-col justify-around gap-3">
               <Result {...resultObj} />
               <div className="flex flex-col gap-2 sm:px-6">
                 {/* <Button

@@ -3,21 +3,44 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 import Umami from "@/components/umami";
 import { ThemeProvider } from "next-themes";
+import { getSiteUrl, siteDescription, siteName, siteTitle } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "AI 算卦 - 在线卜卦 GPT4 解读",
-  description:
-    "AI 算卦 - 通过进行六次硬币的随机卜筮，生成卦象，并使用 AI 对卦象进行分析｜AI 算命、在线算命、在线算卦、周易易经64卦",
-  appleWebApp: {
-    title: "AI 算卦",
-  },
-};
+export function generateMetadata(): Metadata {
+  const siteUrl = getSiteUrl();
+  const images = siteUrl
+    ? [{ url: new URL("/apple-icon.png", siteUrl).href, alt: siteName }]
+    : undefined;
+
+  return {
+    metadataBase: siteUrl,
+    title: { default: siteTitle, template: `%s | ${siteName}` },
+    description: siteDescription,
+    applicationName: siteName,
+    other: {
+      "google-adsense-account": "ca-pub-9639750615409415",
+    },
+    openGraph: {
+      type: "website",
+      locale: "zh_CN",
+      siteName,
+      title: siteTitle,
+      description: siteDescription,
+      images,
+    },
+    twitter: {
+      card: "summary",
+      title: siteTitle,
+      description: siteDescription,
+      images,
+    },
+    appleWebApp: { title: siteName },
+  };
+}
 
 export const viewport: Viewport = {
   viewportFit: "cover",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f5f5f4" },
     { media: "(prefers-color-scheme: dark)", color: "#333333" },
@@ -30,8 +53,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="cn" suppressHydrationWarning>
+    <html lang="zh-CN" suppressHydrationWarning>
       <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9639750615409415"
+          crossOrigin="anonymous"
+        />
         <link
           rel="stylesheet"
           href="https://registry.npmmirror.com/lxgw-wenkai-screen-web/latest/files/lxgwwenkaiscreen/result.css"
